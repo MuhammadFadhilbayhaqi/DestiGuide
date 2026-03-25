@@ -37,31 +37,19 @@ Route::post('/proses-pilih-tiket', [PemesananController::class, 'prosesPilihTike
 Route::get('/pemesanan', [PemesananController::class, 'halamanPemesanan'])->name('halamanPemesanan');
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/informasi', function () {
-    return view('wisatawan.informasi');
-});
-// Route::get('/pemesanan', function () {
-//     return view('wisatawan.pemesanan')->name('pemesanan');
-// });
-// Route::get('/mitra', function () {
-//     return view('mitra.dashboard')->name('mitra');
-// });
+Route::get('/informasi/{id}', [WisataController::class, 'informasi'])->name('informasi.show');
+
 Route::get('/mitra', [WisataController::class, 'mitra'])->name('mitra');
 
-// Route Transaksi
-
-
+// Dashboard — accessible by both guests and logged-in users
 Route::get('/dashboard', function () {
-    $destinations = Wisata::all();
+    $destinations = Wisata::with('images')->get();
     return view('dashboard', compact('destinations'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->name('dashboard');
 
 Route::get('/', function () {
-    $destinations = Wisata::all();
-    return view('welcome', compact('destinations'));
+    $destinations = Wisata::with('images')->get();
+    return view('dashboard', compact('destinations'));
 });
 
 

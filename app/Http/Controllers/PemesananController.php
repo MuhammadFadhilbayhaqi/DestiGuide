@@ -60,13 +60,14 @@ class PemesananController extends Controller
 
     public function halamanPemesanan()
     {
-        // Dapatkan tanggal dari sesi
         $tanggalPemesanan = Session::get('tanggal_pemesanan');
+        $wisataId = Session::get('wisata_id');
 
-        // Lakukan apa yang perlu Anda lakukan dengan tanggal ini
-        // ...
+        $wisata = \App\Models\Wisata::find($wisataId);
 
-        // Tampilkan halaman pemesanan
-        return view('wisatawan.pemesanan', ['tanggalPemesanan' => $tanggalPemesanan]);
+        return view('wisatawan.pemesanan', [
+            'tanggalPemesanan' => $tanggalPemesanan,
+            'wisata' => $wisata,
+        ]);
     }
 }

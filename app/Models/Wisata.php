@@ -16,6 +16,11 @@ class Wisata extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    public function images()
+    {
+        return $this->hasMany(WisataImage::class)->orderBy('sort_order');
+    }
+
     protected $fillable = [
         'user_id',
         'nama',

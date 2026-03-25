@@ -1,146 +1,93 @@
-<html lang="en">
+@extends('layouts.mitra-layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('build/assets/css/main.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <!-- Tambahkan link CSS DataTables -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <title>Register</title>
-</head>
+@section('title', 'Dashboard Mitra')
 
-<body>
-    <!-- Header -->
-    <nav class="navbar navbar-light" style="background-color: #072F39;">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="img/Logo.png" alt="" width="50" height="50">
-            </a>
-            <div class="d-flex">
-                @auth
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle bg-transparent text-light" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ Auth::user()->name }}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="dropdown-item" type="submit">Log Out</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+@section('content')
+<div class="container">
+    {{-- Greeting --}}
+    <div class="mitra-greeting mt-4">
+        <h2><i class="bi bi-hand-wave me-2"></i>Halo, {{ Auth::user()->name }}!</h2>
+        <p>Selamat datang di panel mitra DestiGuide. Kelola wisata Anda dengan mudah dari sini.</p>
+    </div>
 
-                @else
-                    <a class="nav-link" href="{{ route('login') }}" style="color: white;">Login</a>
-                    @if (Route::has('register'))
-                        <a class="nav-link" href="{{ route('register') }}" style="color: white;">Register</a>
-                    @endif
-                @endauth
+    {{-- Stats --}}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4">
+            <div class="mitra-stat-card">
+                <div class="stat-icon"><i class="bi bi-map"></i></div>
+                <div class="stat-value">{{ $wisatas->count() }}</div>
+                <div class="stat-label">Total Wisata</div>
             </div>
         </div>
-    </nav>
-
-
-    <!-- End Header -->
-
-    {{-- <!-- Content -->
-    <div class="bg" style="max-height: 100vh">
-        <div class="atas p-5">
-            <h1 class="mb-4 mt-4">Daftar Wisata</h1>
-
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
-                  <div class="card h-100">
-                    <img src="img/image 4.png" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-primary rounded-pill" style="background-color: #072F39">Kelola Wisata</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card h-100">
-                    <img src="img/image 4.png" class="card-img-top" alt="">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-primary rounded-pill" style="background-color: #072F39">Kelola Wisata</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="card h-100">
-                    <img src="img/image 4.png" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-primary rounded-pill" style="background-color: #072F39">Kelola Wisata</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+        <div class="col-6 col-md-4">
+            <div class="mitra-stat-card">
+                <div class="stat-icon"><i class="bi bi-ticket-perforated"></i></div>
+                <div class="stat-value">{{ $wisatas->sum('jumlahTiket') }}</div>
+                <div class="stat-label">Total Tiket Tersedia</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="mitra-stat-card">
+                <div class="stat-icon"><i class="bi bi-plus-circle"></i></div>
+                <a href="{{ route('viewWisata') }}" class="btn-mitra btn-mitra-sm mt-2 text-decoration-none">
+                    <i class="bi bi-plus-lg"></i> Tambah Wisata Baru
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div class="d-flex justify-content-center align-items-center mb-4">
-        <a href="{{ route('viewWisata') }}" class="btn btn-primary rounded-pill" style="background-color: #072F39">Daftar Wisata</a>
+    {{-- Wisata List --}}
+    <div class="mitra-page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h1>Wisata Anda</h1>
+            <p class="page-subtitle">Daftar wisata yang Anda kelola</p>
+        </div>
+        <a href="{{ route('kelolaWisata') }}" class="btn-mitra-outline btn-mitra-sm">
+            <i class="bi bi-table"></i> Lihat Semua
+        </a>
     </div>
 
-
-    <!-- End Content --> --}}
-
-    <!-- Content -->
-<div class="bg" style="max-height: 100vh">
-    <div class="atas p-5">
-        <h1 class="mb-4 mt-4">Daftar Wisata</h1>
-
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+    @if($wisatas->isEmpty())
+        <div class="mitra-empty-state">
+            <div class="empty-icon"><i class="bi bi-geo-alt"></i></div>
+            <h3>Belum ada wisata terdaftar</h3>
+            <p>Mulai tambahkan wisata pertama Anda agar bisa ditemukan wisatawan.</p>
+            <a href="{{ route('viewWisata') }}" class="btn-mitra">
+                <i class="bi bi-plus-lg"></i> Tambah Wisata
+            </a>
+        </div>
+    @else
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
             @foreach($wisatas as $wisata)
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="{{ asset('storage/' . $wisata->image) }}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <a href="{{ route('kelolaWisata') }}" class="btn btn-primary rounded-pill" style="background-color: #072F39">Kelola Wisata</a>
-
-
+            <div class="col">
+                <div class="mitra-card">
+                    <div class="card-img-wrapper">
+                        <img src="{{ asset('storage/' . $wisata->image) }}" alt="{{ $wisata->nama }}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $wisata->nama }}</h5>
+                        <div class="card-detail">
+                            <i class="bi bi-geo-alt-fill text-danger"></i>
+                            {{ $wisata->provinsi ?? '-' }}, {{ $wisata->kecamatan ?? '-' }}
+                        </div>
+                        <div class="card-detail">
+                            <i class="bi bi-tag-fill" style="color:var(--mitra-primary);"></i>
+                            Rp {{ number_format($wisata->harga ?? 0, 0, ',', '.') }}
+                        </div>
+                        <div class="card-detail">
+                            <i class="bi bi-ticket-perforated-fill" style="color:var(--mitra-warning);"></i>
+                            {{ $wisata->jumlahTiket ?? 0 }} tiket tersedia
+                        </div>
+                        <div class="card-actions">
+                            <a href="{{ route('editWisata', $wisata->id) }}" class="btn-mitra btn-mitra-sm w-100 justify-content-center">
+                                <i class="bi bi-pencil-square"></i> Kelola
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
-    </div>
-
-    <div class="d-flex justify-content-center align-items-center mb-4">
-        <a href="{{ route('viewWisata') }}" class="btn btn-primary rounded-pill" style="background-color: #072F39">Daftar Wisata</a>
-    </div>
+    @endif
 </div>
-<!-- End Content -->
-
-
-    <!-- footer -->
-    <footer class="text-center" style="background-color: #FFFFFF">
-
-        <!-- Copyright -->
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05); color: #2482C1">
-            © 2023 Desti Guide company. All Rights Reserved.
-        </div>
-        <!-- Copyright -->
-      </footer>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-        </script>
-
-        <!-- Add this at the bottom of your layout file, before the closing body tag -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-</body>
-
-</html>
+@endsection

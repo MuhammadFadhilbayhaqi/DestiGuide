@@ -1,155 +1,137 @@
-{{-- <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout> --}}
-
-<html lang="en">
-
+<!DOCTYPE html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('build/assets/css/main.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <!-- Tambahkan link CSS DataTables -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <title>Register</title>
+    <title>Daftar — DestiGuide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 </head>
+<body class="auth-body">
 
-<body>
-    <!-- Content -->
-    <div class="bg">
-        <div class="text text-center p-5">
-            <h1 style="color: #2482C1">DESTIGUIDE</h1>
-            <p>Nikmati liburan dengan mudah  bersama kami !</p>
+    <div class="auth-container auth-container-wide">
+        {{-- Brand --}}
+        <div class="auth-brand">
+            <img src="{{ asset('img/logo.png') }}" alt="DestiGuide">
+            <h1>DESTIGUIDE</h1>
+            <p>Buat akun dan mulai jelajahi wisata Indonesia</p>
         </div>
 
-        <div class="content d-flex justify-content-between px-5 mx-5">
-            <div class="logo">
-                <img src="img/logo.png" alt="">
-            </div>
-            <div class="form">
-                <div class="text fs-1" style="color: #2482C1">
-                    Create account
+        {{-- Card --}}
+        <div class="auth-card">
+            <h2 class="auth-card-title">Buat Akun Baru</h2>
+            <p class="auth-card-subtitle">Isi data di bawah untuk mendaftar</p>
+
+            {{-- Errors --}}
+            @if($errors->any())
+                <div class="auth-alert-error">
+                    <i class="bi bi-exclamation-circle-fill me-1"></i>
+                    {{ $errors->first() }}
                 </div>
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
+            @endif
 
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
+                {{-- Name --}}
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nama Lengkap</label>
+                    <input id="name" type="text" class="form-control" name="name"
+                           value="{{ old('name') }}" placeholder="Masukkan nama lengkap" required autofocus>
+                </div>
 
-                    <div class="mb-3">
+                {{-- Email --}}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" type="email" class="form-control" name="email"
+                           value="{{ old('email') }}" placeholder="nama@email.com" required>
+                </div>
+
+                {{-- Phone --}}
+                <div class="mb-3">
+                    <label for="handphone" class="form-label">No. Handphone</label>
+                    <input id="handphone" type="tel" class="form-control" name="handphone"
+                           value="{{ old('handphone') }}" placeholder="Contoh: 08123456789" required>
+                </div>
+
+                {{-- Passwords --}}
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="auth-password-wrapper">
+                            <input id="password" type="password" class="form-control" name="password"
+                                   placeholder="Min. 8 karakter" required>
+                            <button type="button" class="auth-password-toggle" onclick="togglePassword('password', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="password_confirmation" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                    <div class="col-md-6">
+                        <label for="password_confirmation" class="form-label">Ulangi Password</label>
+                        <div class="auth-password-wrapper">
+                            <input id="password_confirmation" type="password" class="form-control"
+                                   name="password_confirmation" placeholder="Ketik ulang password" required>
+                            <button type="button" class="auth-password-toggle" onclick="togglePassword('password_confirmation', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="mb-3">
-                        <label for="handphone" class="form-label">Phone Number</label>
-                        <input type="number" class="form-control" id="handphone" name="handphone" required>
+                {{-- Role --}}
+                <div class="mb-4">
+                    <label class="form-label">Daftar Sebagai</label>
+                    <div class="auth-role-selector">
+                        <div class="auth-role-option">
+                            <input type="radio" name="role" id="roleWisatawan" value="Wisatawan"
+                                   {{ old('role', 'Wisatawan') == 'Wisatawan' ? 'checked' : '' }} required>
+                            <label for="roleWisatawan">
+                                <i class="bi bi-person-walking"></i>
+                                <span>Wisatawan</span>
+                                <small>Cari & pesan wisata</small>
+                            </label>
+                        </div>
+                        <div class="auth-role-option">
+                            <input type="radio" name="role" id="roleMitra" value="Mitra"
+                                   {{ old('role') == 'Mitra' ? 'checked' : '' }}>
+                            <label for="roleMitra">
+                                <i class="bi bi-building"></i>
+                                <span>Mitra</span>
+                                <small>Kelola tempat wisata</small>
+                            </label>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-select" id="role" name="role" required>
-                            <option selected>Choose...</option>
-                            <option value="Wisatawan">Wisatawan</option>
-                            <option value="Mitra">Mitra</option>
-                        </select>
-                    </div>
+                {{-- Submit --}}
+                <button type="submit" class="btn-auth">
+                    <i class="bi bi-person-plus"></i> Daftar
+                </button>
+            </form>
 
-                    <div class="d-flex justify-content-end">
-                        <div class="text"></div>
-                        <button type="submit" class="btn btn-primary">Register</button>
-                    </div>
-
-                </form>
-            </div>
+            {{-- Login Link --}}
+            <p class="auth-footer-text">
+                Sudah punya akun? <a href="{{ route('login') }}" class="auth-link">Masuk di sini</a>
+            </p>
         </div>
 
+        <p class="auth-copyright">&copy; {{ date('Y') }} DestiGuide. All Rights Reserved.</p>
     </div>
 
-    <!-- End Content -->
-
-    <!-- footer -->
-    <footer class="text-center py-3" style="background-color: white;">
-        <div class="container">
-          <span style="color: #2482C1;">© 2023 Desti Guide company. All Rights Reserved.</span>
-        </div>
-    </footer>
-    <!-- End Footer-->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-        </script>
-
-        <!-- Add this at the bottom of your layout file, before the closing body tag -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        }
+    </script>
 </body>
-
 </html>

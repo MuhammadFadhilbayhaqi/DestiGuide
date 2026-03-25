@@ -1,239 +1,206 @@
-<html lang="en">
+@extends('layouts.mitra-layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('build/assets/css/main.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <!-- Tambahkan link CSS DataTables -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <title>Register</title>
-</head>
+@section('title', 'Pendaftaran Wisata')
 
-<body>
-    <!-- Header -->
-    <nav class="navbar navbar-light" style="background-color: #072F39;">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="img/Logo.png" alt="" width="50" height="50">
-            </a>
-            <div class="d-flex">
-                @auth
-                <div class="dropdown">
-                    <button class="btn dropdown-toggle bg-transparent text-light" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ Auth::user()->name }}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="dropdown-item" type="submit">Log Out</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-
-                @else
-                    <a class="nav-link" href="{{ route('login') }}" style="color: white;">Login</a>
-                    @if (Route::has('register'))
-                        <a class="nav-link" href="{{ route('register') }}" style="color: white;">Register</a>
-                    @endif
-                @endauth
-            </div>
-        </div>
-    </nav>
-
-
-    <!-- End Header -->
-
-    <!-- Content -->
-    <div class="bg">
-        <div class="judul d-flex flex-column justify-content-center align-items-center mt-5">
-            <h1>Pendaftaran Wisata</h1>
-            <p class="text-center">Selamat datang di halaman Pendaftaran Wisata DESTIGUIDE. Untuk memulai proses pendaftaran Wisata Anda,
-                <br>silakan untuk bisa melengkapi data-data di halaman ini dengan benar.</p>
-
-                <div class="form p-5 mt-5 mb-4 rounded" style="width: 55%; background: #82969B">
-                    <form action="{{ route('registWisata') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-
-                        <div class="mb-3">
-                            <label for="nama" class="form-label">Nama Wisata Yang Ingin Didaftarkan</label>
-                            <input type="text" class="form-control" id="nama" name="nama" placeholder="Tulis tanpa karakter simbol seperti #, @, %, dsb. Contoh: Margacinta Park" required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="noHp" class="form-label">No.Handphone Wisata</label>
-                            <input type="text" class="form-control" id="noHp" name="noHp" placeholder="Tulis nomor telepon aktif dengan format 62xxx. Contoh: 628123456789" required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="alamatEmail" class="form-label">Alamat Email Wisata</label>
-                            <input type="email" class="form-control" id="alamatEmail" name="alamatEmail" placeholder="Tulis alamat email aktif dengan huruf kecil. Contoh: soto.kudus@xxxx.com" required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="alamatLengkap" class="form-label">Alamat Lengkap Wisata</label>
-                            <input type="text" class="form-control" id="alamatLengkap" name="alamatLengkap" placeholder="Tulis alamat lengkap dengan nomor; RT/RW; kelurahan; kecamatan; dan patokan." required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="detail" class="form-label">Detail Lokasi</label>
-                            <input type="text" class="form-control" id="detail" name="detail" placeholder="Masukan Detail Alamat Dengan Sesuai berupa link" required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="kota" class="form-label">Kota</label>
-                            <input type="text" class="form-control" id="kota" name="kota" placeholder="Tulis kota yang sesuai dengan alamat Wisata Anda." required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="provinsi" class="form-label">Provinsi</label>
-                            <input type="text" class="form-control" id="provinsi" name="provinsi" placeholder="Tulis provinsi yang sesuai dengan alamat Wisata Anda." required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="kecamatan" class="form-label">Kecamatan</label>
-                            <input type="text" class="form-control" id="kecamatan" name="kecamatan" placeholder="Tulis Kecamatan yang sesuai dengan alamat Wisata Anda." required>
-                            <x-input-error :messages="$errors->get('alamatEmail')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="harga" class="form-label">Harga Tiket</label>
-                            <input type="number" class="form-control" id="harga" name="harga" placeholder="Masukkan harga tiket" required>
-                            <x-input-error :messages="$errors->get('harga')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="jumlahTiket" class="form-label">Jumlah Tiket</label>
-                            <input type="number" class="form-control" id="jumlahTiket" name="jumlahTiket" placeholder="Tulis dengan jelas Informasi Umum terkait Wisata Anda." required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="jadwal" class="form-label">Pilih Jadwal</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="jadwal[]" value="Senin">
-                                <label class="form-check-label" for="jadwal">Senin</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="jadwal[]" value="Selasa">
-                                <label class="form-check-label" for="jadwal">Selasa</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="jadwal[]" value="Rabu">
-                                <label class="form-check-label" for="jadwal">Rabu</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="jadwal[]" value="Kamis">
-                                <label class="form-check-label" for="jadwal">Kamis</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="jadwal[]" value="Jumat">
-                                <label class="form-check-label" for="jadwal">Jumat</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="jadwal[]" value="Sabtu">
-                                <label class="form-check-label" for="jadwal">Sabtu</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="jadwal[]" value="Minggu">
-                                <label class="form-check-label" for="jadwal">Minggu</label>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="informasi" class="form-label">Informasi umum</label>
-                            <input type="text" class="form-control" id="informasi" name="informasi" placeholder="Tulis dengan jelas Informasi Umum terkait Wisata Anda." required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="syarat" class="form-label">Syarat & ketentuan</label>
-                            <input type="text" class="form-control" id="syarat" name="syarat" placeholder="Tuliskan Syarat dan Ketentuan terkait Wisata Anda." required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Lampirkan Beberapa Foto </label>
-                            <input type="file" class="form-control" id="image" name="image" required>
-                        </div>
-
-                        <div class="d-flex justify-content-end">
-                            <div class="text"></div>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-
-                    </form>
-                </div>
-        </div>
-
-
-
-
+@section('content')
+<div class="container">
+    <div class="mitra-page-header">
+        <h1><i class="bi bi-plus-circle me-2" style="color:var(--mitra-primary);"></i>Pendaftaran Wisata Baru</h1>
+        <p class="page-subtitle">Lengkapi data wisata Anda dengan benar agar mudah ditemukan wisatawan.</p>
     </div>
 
-    <!-- End Content -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <form action="{{ route('registWisata') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-    <!-- footer -->
-    <footer class="text-center" style="background-color: #FFFFFF">
-        <!-- Grid container -->
-        {{-- <div class="container p-4 pb-0">
-          <!-- Section: Social media -->
-          <section class="mb-4">
-            <!-- Instagram -->
-            <a
-              data-mdb-ripple-init
-              class="btn text-white btn-floating m-1"
-              style="background-color: #ac2bac;"
-              href="#!"
-              role="button"
-              ><i class="bi bi-instagram"></i
-            ></a>
+                {{-- Section: Info Dasar --}}
+                <div class="mitra-form-card">
+                    <div class="mitra-form-section">
+                        <h3 class="mitra-section-title">
+                            <i class="bi bi-info-circle"></i> Informasi Dasar
+                        </h3>
 
-            <!-- Github -->
-            <a
-              data-mdb-ripple-init
-              class="btn text-white btn-floating m-1"
-              style="background-color: #333333;"
-              href="#!"
-              role="button"
-              ><i class="bi bi-github"></i
-            ></a>
-          </section>
-          <!-- Section: Social media -->
-        </div> --}}
-        <!-- Grid container -->
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">Nama Wisata <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nama" name="nama"
+                                   placeholder="Contoh: Margacinta Park" value="{{ old('nama') }}" required>
+                            @error('nama') <small class="text-danger">{{ $message }}</small> @enderror
+                        </div>
 
-        <!-- Copyright -->
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05); color: #2482C1">
-            © 2023 Desti Guide company. All Rights Reserved.
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="noHp" class="form-label">No. Telepon Wisata <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="noHp" name="noHp"
+                                           placeholder="Contoh: 628123456789" value="{{ old('noHp') }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="alamatEmail" class="form-label">Email Wisata <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" id="alamatEmail" name="alamatEmail"
+                                           placeholder="Contoh: wisata@email.com" value="{{ old('alamatEmail') }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="informasi" class="form-label">Informasi Umum <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="informasi" name="informasi" rows="3"
+                                      placeholder="Ceritakan secara singkat tentang wisata Anda..." required>{{ old('informasi') }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="syarat" class="form-label">Syarat &amp; Ketentuan <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="syarat" name="syarat" rows="3"
+                                      placeholder="Tuliskan aturan kunjungan, barang yang tidak boleh dibawa, dll..." required>{{ old('syarat') }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Section: Lokasi --}}
+                <div class="mitra-form-card">
+                    <div class="mitra-form-section">
+                        <h3 class="mitra-section-title">
+                            <i class="bi bi-geo-alt"></i> Lokasi
+                        </h3>
+
+                        <div class="mb-3">
+                            <label for="alamatLengkap" class="form-label">Alamat Lengkap <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="alamatLengkap" name="alamatLengkap"
+                                   placeholder="Contoh: Jl. Raya No. 10, RT 01/RW 02, Kel. Sukamaju" value="{{ old('alamatLengkap') }}" required>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="provinsi" class="form-label">Provinsi <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="provinsi" name="provinsi"
+                                           placeholder="Contoh: Jawa Barat" value="{{ old('provinsi') }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="kota" class="form-label">Kota</label>
+                                    <input type="text" class="form-control" id="kota" name="kota"
+                                           placeholder="Contoh: Bandung" value="{{ old('kota') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="kecamatan" class="form-label">Kecamatan <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="kecamatan" name="kecamatan"
+                                           placeholder="Contoh: Lembang" value="{{ old('kecamatan') }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="detail" class="form-label">Link Google Maps</label>
+                            <input type="text" class="form-control" id="detail" name="detail"
+                                   placeholder="Tempel link Google Maps lokasi wisata Anda" value="{{ old('detail') }}">
+                            <div class="form-text"><i class="bi bi-info-circle me-1"></i>Opsional, untuk memudahkan wisatawan menemukan lokasi.</div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Section: Tiket & Jadwal --}}
+                <div class="mitra-form-card">
+                    <div class="mitra-form-section">
+                        <h3 class="mitra-section-title">
+                            <i class="bi bi-ticket-perforated"></i> Tiket &amp; Jadwal
+                        </h3>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="harga" class="form-label">Harga Tiket (Rp) <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="harga" name="harga"
+                                           placeholder="Contoh: 25000" value="{{ old('harga') }}" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="jumlahTiket" class="form-label">Jumlah Tiket Tersedia <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="jumlahTiket" name="jumlahTiket"
+                                           placeholder="Contoh: 100" value="{{ old('jumlahTiket') }}" min="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Hari Buka <span class="text-danger">*</span></label>
+                            <div class="d-flex flex-wrap gap-3">
+                                @foreach(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'] as $hari)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="jadwal[]" value="{{ $hari }}" id="jadwal{{ $hari }}"
+                                           {{ is_array(old('jadwal')) && in_array($hari, old('jadwal')) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="jadwal{{ $hari }}">{{ $hari }}</label>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Section: Foto --}}
+                <div class="mitra-form-card">
+                    <div class="mitra-form-section">
+                        <h3 class="mitra-section-title">
+                            <i class="bi bi-image"></i> Foto Wisata
+                        </h3>
+
+                        <div class="mb-3">
+                            <label for="images" class="form-label">Unggah Foto (Maks. 10) <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" id="images" name="images[]" accept="image/*"
+                                   multiple required onchange="previewImages(event)">
+                            <div class="form-text"><i class="bi bi-info-circle me-1"></i>Format: JPG, PNG (maks. 2MB per foto). Pilih hingga 10 foto sekaligus.</div>
+                            <div id="imagePreviewGrid" class="d-flex flex-wrap gap-2 mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Submit --}}
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <a href="{{ route('mitra') }}" class="btn-mitra-outline">
+                        <i class="bi bi-arrow-left"></i> Kembali
+                    </a>
+                    <button type="submit" class="btn-mitra">
+                        <i class="bi bi-check-lg"></i> Simpan Wisata
+                    </button>
+                </div>
+            </form>
         </div>
-        <!-- Copyright -->
-      </footer>
-    {{-- <footer class="text-center py-3" style="background-color: #2FB69F;">
-        <div class="container">
-          <span style="color: white;">copyright@2023</span>
-        </div>
-    </footer> --}}
-    <!-- End Footer-->
+    </div>
+</div>
+@endsection
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-        </script>
+@push('scripts')
+<script>
+function previewImages(event) {
+    const grid = document.getElementById('imagePreviewGrid');
+    grid.innerHTML = '';
+    const files = Array.from(event.target.files).slice(0, 10);
+    if (files.length > 10) {
+        alert('Maksimal 10 foto!');
+        event.target.value = '';
+        return;
+    }
+    files.forEach((file, i) => {
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'position:relative;width:120px;height:90px;border-radius:8px;overflow:hidden;border:2px solid #E2E8F0;';
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+        const badge = document.createElement('span');
+        badge.textContent = i + 1;
+        badge.style.cssText = 'position:absolute;top:4px;left:4px;background:var(--mitra-primary);color:#fff;font-size:0.7rem;padding:1px 6px;border-radius:4px;';
+        wrapper.appendChild(img);
+        wrapper.appendChild(badge);
+        grid.appendChild(wrapper);
+    });
+}
+</script>
+@endpush
 
-        <!-- Add this at the bottom of your layout file, before the closing body tag -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script src="//cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-</body>
-
-</html>

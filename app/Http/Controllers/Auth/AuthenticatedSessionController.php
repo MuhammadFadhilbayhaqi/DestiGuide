@@ -31,13 +31,15 @@ class AuthenticatedSessionController extends Controller
     $request->session()->regenerate();
 
     // Check the role of the authenticated user
-    if (Auth::user()->role == 'mitra') {
+    $role = strtolower(Auth::user()->role);
+
+    if ($role == 'mitra') {
         // Redirect to the mitra home page
         return redirect()->intended(RouteServiceProvider::MITRA_HOME);
-    } elseif (Auth::user()->role == 'Wisatawan') {
-        // Redirect to the wisatawan home page
-        return redirect()->intended(RouteServiceProvider::HOME);
     }
+
+    // Default: redirect wisatawan and any other role to dashboard
+    return redirect()->intended(RouteServiceProvider::HOME);
 }
 
 

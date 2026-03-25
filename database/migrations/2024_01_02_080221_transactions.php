@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('wisata_id')->constrained();
+
+            // Ubah baris ini dengan menambahkan nama tabel 'wisata' di dalam constrained()
+            $table->foreignId('wisata_id')->constrained('wisata');
+
             $table->string('nama_lengkap');
             $table->string('nomor_handphone');
             $table->string('email');
